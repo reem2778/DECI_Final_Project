@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Resizer</title>
+</head>
+<body>
+  <h1>Image Resizer & Placeholder Generator</h1>
+
+  <section id="image-selection">
+    <h2>Select an image</h2>
+    <div id="image-list">
+      <!-- Images from backend will show here -->
+    </div>
+  </section>
+
+  <section id="resize-form">
+    <h2>Resize Image</h2>
+    <form id="resizeForm">
+      <label>
+        Width: <input type="number" id="widthInput" required min="1" />
+      </label>
+      <label>
+        Height: <input type="number" id="heightInput" required min="1" />
+      </label>
+      <button type="submit">Generate Placeholder URL</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <section id="upload-form">
+    <h2>Upload New Image</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" id="fileInput" name="image" accept="image/*" required />
+      <button type="submit">Upload</button>
+    </form>
+    <div id="uploadResult"></div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
