@@ -14,8 +14,13 @@ app.use(express_1.default.urlencoded({ extended: true }));
 // Serve static folders
 app.use("/images", express_1.default.static(path_1.default.join(__dirname, "../public/images")));
 app.use("/generated", express_1.default.static(path_1.default.join(__dirname, "../public/generated")));
+app.use(express_1.default.static(path_1.default.join(__dirname, "../../client")));
 // Mount routes
 app.use("/api", api_1.default);
+// Redirect all unmatched routes
+app.get("*", (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, "../../client/index.html"));
+});
 // Start server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

@@ -7,6 +7,10 @@ import sharp from "sharp";
 
 const router: Router = express.Router();
 
+router.get("/test", (req: Request, res: Response) => {
+    res.json({ message: "API is working" });
+});
+
 // GET /api/placeholder
 router.get("/placeholder", async (req: Request, res: Response): Promise<void> => {
     const width = parseInt(req.query.width as string);
@@ -60,6 +64,22 @@ router.get("/resize", async (req: Request, res: Response): Promise<void> => {
     }
 
     res.json({ url: `/generated/${resizedName}` });
+});
+
+// List images
+
+router.get("/images", (req: Request, res: Response) => {
+    const imagesDir = path.join(__dirname, "../../../public/images");
+    fs.readdir(imagesDir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: "Failed to list images" });
+        }
+        // Filter for image files only 
+        const imageFiles = files.filter((file) =>
+            /\.(jpe?g|png|gif|bmp)$/i.test(file)
+        );
+        res.json(imageFiles);
+    });
 });
 
 export default router;
