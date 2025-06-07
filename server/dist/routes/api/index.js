@@ -8,8 +8,10 @@ const imageController_1 = require("../../controllers/imageController");
 const upload_1 = require("../../middleware/upload");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const sharp_1 = __importDefault(require("sharp"));
 const router = express_1.default.Router();
+router.get("/test", (req, res) => {
+    res.json({ message: "API is working" });
+});
 // GET /api/placeholder
 router.get("/placeholder", async (req, res) => {
     const width = parseInt(req.query.width);
@@ -38,23 +40,25 @@ router.get("/resize", async (req, res) => {
     const width = parseInt(req.query.width);
     const height = parseInt(req.query.height);
     const imageName = req.query.image;
+    console.log("Resize request for image:", imageName, "width:", width, "height:", height);
     if (!imageName || isNaN(width) || isNaN(height)) {
         res.status(400).json({ error: "Missing or invalid parameters" });
         return;
     }
-    const originalPath = path_1.default.join(__dirname, "../../public/images", imageName);
-    const resizedName = `${width}x${height}-${imageName}`;
-    const resizedPath = path_1.default.join(__dirname, "../../public/generated", resizedName);
-    if (!fs_1.default.existsSync(originalPath)) {
-        res.status(404).json({ error: "Original image not found" });
-        return;
+    try {
+        const url = await (0, imageController_1.resizeImage)(imageName, width, height);
+        res.json({ url });
     }
-    if (!fs_1.default.existsSync(resizedPath)) {
-        await (0, sharp_1.default)(originalPath).resize(width, height).toFile(resizedPath);
+    catch (error) {
+        console.error("Resize error:", error.message);
+        if (error.message === "Original image not found") {
+            res.status(404).json({ error: error.message });
+        }
+        else {
+            res.status(500).json({ error: "Failed to resize image" });
+        }
     }
-    res.json({ url: `/generated/${resizedName}` });
 });
-exports.default = router;
 // List images
 router.get("/images", (req, res) => {
     const imagesDir = path_1.default.join(__dirname, "../../../public/images");
@@ -67,3 +71,4 @@ router.get("/images", (req, res) => {
         res.json(imageFiles);
     });
 });
+exports.default = router;

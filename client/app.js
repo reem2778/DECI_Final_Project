@@ -37,7 +37,7 @@ window.addEventListener("DOMContentLoaded", loadImages);
 document.getElementById("resize-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (!window.selectedImage) {
+    if (!window.selectImage) {
         alert("Please select an image first!");
         return;
     }
@@ -54,7 +54,7 @@ document.getElementById("resize-form").addEventListener("submit", async (e) => {
         // Call your resize API
         const res = await fetch(
             `http://localhost:3000/api/resize?image=${encodeURIComponent(
-                window.selectedImage
+                window.selectImage
             )}&width=${width}&height=${height}`
         );
         const data = await res.json();
@@ -70,4 +70,41 @@ document.getElementById("resize-form").addEventListener("submit", async (e) => {
         alert("Failed to generate image.");
     }
 });
+
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput.files.length) {
+        alert("Please select an image file to upload.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", fileInput.files[0]);
+
+    try {
+        const res = await fetch("http://localhost:3000/api/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await res.json();
+
+        const uploadResult = document.getElementById("uploadResult");
+
+        if (res.ok) {
+            uploadResult.textContent = "Image uploaded successfully!";
+            // Reload images to reflect new upload
+            loadImages();
+            fileInput.value = "";
+        } else {
+            uploadResult.textContent = `Upload failed: ${data.error}`;
+        }
+    } catch (err) {
+        console.error("Upload error:", err);
+        document.getElementById("uploadResult").textContent = "Failed to upload image.";
+    }
+});
+
 

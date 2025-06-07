@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Image Resizer</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -19,12 +20,12 @@
 
     <section id="resize-form">
         <h2>Resize Image</h2>
-        <form id="resizeForm">
+        <form id="resize-form">
             <label>
-                Width: <input type="number" id="widthInput" required min="1" />
+                Width: <input type="number" id="width" required min="1" />
             </label>
             <label>
-                Height: <input type="number" id="heightInput" required min="1" />
+                Height: <input type="number" id="height" required min="1" />
             </label>
             <button type="submit">Generate Placeholder URL</button>
         </form>
@@ -40,7 +41,7 @@
         <div id="uploadResult"></div>
     </section>
 
-    <h2>Resize Selected Image</h2>
+    <!-- <h2>Resize Selected Image</h2>
     <form id="resize-form">
         <label>
             Width:
@@ -53,7 +54,7 @@
         <button type="submit">Generate Placeholder URL</button>
     </form>
 
-    <div id="result"></div>
+    <div id="result"></div> -->
 
     <script src="app.js"></script>
 </body>
