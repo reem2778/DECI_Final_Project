@@ -5,7 +5,10 @@ import path from "path";
 describe("Image API Endpoints", () => {
   describe("Image API Endpoints", () => {
     it("should upload an image", async () => {
-      const testImagePath = path.join(__dirname, "../testfiles/test.jpg");
+      const testImagePath = path.join(
+        __dirname,
+        "../../public/images/test.jpg"
+      );
 
       const res = await request(app)
         .post("/api/upload")

@@ -55,14 +55,14 @@ A Node.js + TypeScript server that provides a REST API for uploading, resizing, 
 # 1. Install dependencies
 - npm install
 
-# 2. Run lint and fix issues
-- npm run lint:fix
+# 2. Run lint 
+- npm run lint
 
 # 3. Format code
 - npm run format
 
 # 4. Run tests
-- npm test
+- npx jasmine --config=jasmine.json --verbose (run in explicit way)
 
 # 5. Build the project
 - npm run build

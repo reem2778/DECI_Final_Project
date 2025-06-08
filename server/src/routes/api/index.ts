@@ -9,11 +9,12 @@ import path from "path";
 
 const router: Router = express.Router();
 
+// Test route
 router.get("/test", (req: Request, res: Response) => {
   res.json({ message: "API is working" });
 });
 
-// GET /api/placeholder
+// GET /api/placeholder - Generate placeholder image
 router.get(
   "/placeholder",
   async (req: Request, res: Response): Promise<void> => {
@@ -28,27 +29,28 @@ router.get(
     const filename = `${width}x${height}.png`;
     const url = await generatePlaceholderImage(width, height, filename);
     res.json({ url });
-  },
+  }
 );
 
-// POST /api/upload
-router.post(
-  "/upload",
-  upload.single("image"),
-  (req: Request, res: Response): void => {
+// POST /api/upload - Upload JPG only
+router.post("/upload", (req: Request, res: Response) => {
+  upload.single("image")(req, res, (err: unknown) => {
+    if (err instanceof Error) {
+      return res.status(400).json({ error: err.message });
+    }
+
     if (!req.file) {
-      res.status(400).json({ error: "No file uploaded" });
-      return;
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
     res.json({
       filename: req.file.filename,
       url: `/images/${req.file.filename}`,
     });
-  },
-);
+  });
+});
 
-// GET /api/resize
+// GET /api/resize - Resize image
 router.get("/resize", async (req: Request, res: Response): Promise<void> => {
   const width = parseInt(req.query.width as string);
   const height = parseInt(req.query.height as string);
@@ -60,7 +62,7 @@ router.get("/resize", async (req: Request, res: Response): Promise<void> => {
     "width:",
     width,
     "height:",
-    height,
+    height
   );
 
   if (!imageName || isNaN(width) || isNaN(height)) {
@@ -87,17 +89,17 @@ router.get("/resize", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// List images
+// GET /api/images - List available images in public/images
 router.get("/images", (req: Request, res: Response) => {
   const imagesDir = path.join(__dirname, "../../../public/images");
+
   fs.readdir(imagesDir, (err, files) => {
     if (err) {
       return res.status(500).json({ error: "Failed to list images" });
     }
-    // Filter for image files only
-    const imageFiles = files.filter((file) =>
-      /\.(jpe?g|png|gif|bmp)$/i.test(file),
-    );
+
+    // Only return image files
+    const imageFiles = files.filter((file) => /\.(jpe?g)$/i.test(file));
     res.json(imageFiles);
   });
 });

@@ -30,6 +30,7 @@ const generatePlaceholderImage = async (width, height, filename) => {
 exports.generatePlaceholderImage = generatePlaceholderImage;
 const resizeImage = async (filename, width, height) => {
     const originalPath = path_1.default.join(imagesDir, filename);
+    console.log("Checking for original image at:", originalPath);
     const outputFilename = `${path_1.default.parse(filename).name}_${width}x${height}${path_1.default.extname(filename)}`;
     const outputPath = path_1.default.join(outputDir, outputFilename);
     if (!fs_1.default.existsSync(originalPath)) {
@@ -38,9 +39,7 @@ const resizeImage = async (filename, width, height) => {
     if (!fs_1.default.existsSync(outputDir)) {
         fs_1.default.mkdirSync(outputDir, { recursive: true });
     }
-    await (0, sharp_1.default)(originalPath)
-        .resize(width, height)
-        .toFile(outputPath);
+    await (0, sharp_1.default)(originalPath).resize(width, height).toFile(outputPath);
     return `/generated/${outputFilename}`;
 };
 exports.resizeImage = resizeImage;

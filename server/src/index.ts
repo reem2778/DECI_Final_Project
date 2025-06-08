@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static(path.join(__dirname, "../public/images")));
 app.use(
   "/generated",
-  express.static(path.join(__dirname, "../public/generated")),
+  express.static(path.join(__dirname, "../public/generated"))
 );
 app.use(express.static(path.join(__dirname, "../../client")));
 

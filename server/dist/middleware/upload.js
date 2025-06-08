@@ -15,4 +15,13 @@ const storage = multer_1.default.diskStorage({
         cb(null, Date.now() + "-" + file.originalname);
     },
 });
-exports.upload = (0, multer_1.default)({ storage });
+// File filter to allow only JPG/JPEG files
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
+        cb(null, true);
+    }
+    else {
+        cb(new Error("Only JPG files are allowed"));
+    }
+};
+exports.upload = (0, multer_1.default)({ storage, fileFilter });

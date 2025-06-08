@@ -9,10 +9,11 @@ const upload_1 = require("../../middleware/upload");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const router = express_1.default.Router();
+// Test route
 router.get("/test", (req, res) => {
     res.json({ message: "API is working" });
 });
-// GET /api/placeholder
+// GET /api/placeholder - Generate placeholder image
 router.get("/placeholder", async (req, res) => {
     const width = parseInt(req.query.width);
     const height = parseInt(req.query.height);
@@ -24,18 +25,22 @@ router.get("/placeholder", async (req, res) => {
     const url = await (0, imageController_1.generatePlaceholderImage)(width, height, filename);
     res.json({ url });
 });
-// POST /api/upload
-router.post("/upload", upload_1.upload.single("image"), (req, res) => {
-    if (!req.file) {
-        res.status(400).json({ error: "No file uploaded" });
-        return;
-    }
-    res.json({
-        filename: req.file.filename,
-        url: `/images/${req.file.filename}`,
+// POST /api/upload - Upload JPG only
+router.post("/upload", (req, res) => {
+    upload_1.upload.single("image")(req, res, (err) => {
+        if (err instanceof Error) {
+            return res.status(400).json({ error: err.message });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        res.json({
+            filename: req.file.filename,
+            url: `/images/${req.file.filename}`,
+        });
     });
 });
-// GET /api/resize
+// GET /api/resize - Resize image
 router.get("/resize", async (req, res) => {
     const width = parseInt(req.query.width);
     const height = parseInt(req.query.height);
@@ -50,24 +55,30 @@ router.get("/resize", async (req, res) => {
         res.json({ url });
     }
     catch (error) {
-        console.error("Resize error:", error.message);
-        if (error.message === "Original image not found") {
-            res.status(404).json({ error: error.message });
+        if (error instanceof Error) {
+            console.error("Resize error:", error.message);
+            if (error.message === "Original image not found") {
+                res.status(404).json({ error: error.message });
+            }
+            else {
+                res.status(500).json({ error: "Failed to resize image" });
+            }
         }
         else {
-            res.status(500).json({ error: "Failed to resize image" });
+            console.error("Unknown error during resize:", error);
+            res.status(500).json({ error: "An unexpected error occurred" });
         }
     }
 });
-// List images
+// GET /api/images - List available images in public/images
 router.get("/images", (req, res) => {
     const imagesDir = path_1.default.join(__dirname, "../../../public/images");
     fs_1.default.readdir(imagesDir, (err, files) => {
         if (err) {
             return res.status(500).json({ error: "Failed to list images" });
         }
-        // Filter for image files only 
-        const imageFiles = files.filter((file) => /\.(jpe?g|png|gif|bmp)$/i.test(file));
+        // Only return image files
+        const imageFiles = files.filter((file) => /\.(jpe?g)$/i.test(file));
         res.json(imageFiles);
     });
 });

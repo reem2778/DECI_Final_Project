@@ -10,7 +10,7 @@ console.log("Files in imagesDir:", fs.readdirSync(imagesDir));
 export const generatePlaceholderImage = async (
   width: number,
   height: number,
-  filename: string,
+  filename: string
 ): Promise<string> => {
   const filePath = path.join(outputDir, filename);
 
@@ -35,9 +35,11 @@ export const generatePlaceholderImage = async (
 export const resizeImage = async (
   filename: string,
   width: number,
-  height: number,
+  height: number
 ): Promise<string> => {
   const originalPath = path.join(imagesDir, filename);
+  console.log("Checking for original image at:", originalPath);
+
   const outputFilename = `${path.parse(filename).name}_${width}x${height}${path.extname(filename)}`;
   const outputPath = path.join(outputDir, outputFilename);
 

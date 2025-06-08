@@ -11,4 +11,17 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({ storage });
+// File filter to allow only JPG/JPEG files
+const fileFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only JPG files are allowed"));
+  }
+};
+
+export const upload = multer({ storage, fileFilter });
