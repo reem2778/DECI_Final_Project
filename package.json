@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine",
+    "test": "cd server && npx jasmine --config=jasmine.json --verbose",
     "start": "nodemon --watch src --exec ts-node server/src/index.ts",
     "build": "tsc",
     "lint": "eslint server/src/**/*.ts",
@@ -12,9 +12,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "A Node.js + TypeScript server that provides a REST API for uploading, resizing, and generating placeholder images. Built with Express, Sharp, Multer, and fully configured with ESLint, Prettier, and unit tests.",
   "devDependencies": {
     "@eslint/js": "^9.27.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.1",
     "@types/jasmine": "^5.1.7",
     "@types/multer": "^1.4.12",
@@ -36,6 +37,7 @@
     "typescript-eslint": "^8.33.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "multer": "^2.0.0",
     "sharp": "^0.34.2"

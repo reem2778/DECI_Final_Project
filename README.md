@@ -62,7 +62,7 @@ A Node.js + TypeScript server that provides a REST API for uploading, resizing, 
 - npm run format
 
 # 4. Run tests
-- npx jasmine --config=jasmine.json --verbose (run in explicit way)
+- npm run test
 
 # 5. Build the project
 - npm run build
